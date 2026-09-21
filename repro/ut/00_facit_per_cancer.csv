@@ -1,0 +1,32 @@
+Cancer,genes_tested,prognostic,median_p,share_prognostic,expected_if_test_valid_and_null
+Kidney Renal Clear Cell Carcinoma (TCGA),14201,7536,0.0006314,0.5307,14.2
+Liver Hepatocellular Carcinoma (TCGA),12894,3403,0.012095,0.2639,12.9
+Kidney Renal Clear Cell Carcinoma (validation),14374,2365,0.02564,0.1645,14.4
+Liver Hepatocellular Carcinoma (validation),12545,2015,0.0309,0.1606,12.5
+Kidney Renal Papillary Cell Carcinoma (TCGA),14141,1783,0.04569,0.1261,14.1
+Glioblastoma Multiforme (validation),14967,1710,0.04173,0.1143,15.0
+Lung Adenocarcinoma (TCGA),14734,1507,0.041870000000000004,0.1023,14.7
+Pancreatic Adenocarcinoma (TCGA),14582,1471,0.03544,0.1009,14.6
+Kidney Chromophobe (TCGA),13252,1203,0.045615,0.0908,13.3
+Pancreatic Adenocarcinoma (validation),14856,1123,0.04897,0.0756,14.9
+Cervical Squamous Cell Carcinoma and Endocervical Adenocarcinoma (TCGA),14445,887,0.04697,0.0614,14.4
+Head and Neck Squamous Cell Carcinoma (TCGA),13888,872,0.053705,0.0628,13.9
+Lung Adenocarcinoma (validation),14705,820,0.0601,0.0558,14.7
+Breast Invasive Carcinoma (TCGA),14564,670,0.061674999999999994,0.046,14.6
+Ovary Serous Cystadenocarcinoma (validation),13801,602,0.07629,0.0436,13.8
+Rectum Adenocarcinoma (validation),15348,517,0.06784499999999999,0.0337,15.3
+Bladder Urothelial Carcinoma (TCGA),14536,510,0.0624,0.0351,14.5
+Rectum Adenocarcinoma (TCGA),13604,444,0.064785,0.0326,13.6
+Glioblastoma Multiforme (TCGA),14426,382,0.09828,0.0265,14.4
+Thyroid Carcinoma (TCGA),13696,378,0.069935,0.0276,13.7
+Stomach Adenocarcinoma (TCGA),14735,335,0.08035,0.0227,14.7
+Colon Adenocarcinoma (validation),15167,326,0.08619,0.0215,15.2
+Ovary Serous Cystadenocarcinoma (TCGA),14327,316,0.07886,0.0221,14.3
+Colon Adenocarcinoma (TCGA),13698,292,0.085545,0.0213,13.7
+Lung Squamous Cell Carcinoma (validation),14717,287,0.09472,0.0195,14.7
+Lung Squamous Cell Carcinoma (TCGA),14589,286,0.07767,0.0196,14.6
+Breast Invasive Carcinoma (validation),13985,283,0.1011,0.0202,14.0
+Skin Cuteneous Melanoma (TCGA),13829,254,0.09124,0.0184,13.8
+Uterine Corpus Endometrial Carcinoma (TCGA),14758,221,0.09693,0.015,14.8
+Prostate Adenocarcinoma (TCGA),13946,172,0.1055,0.0123,13.9
+Testicular Germ Cell Tumor (TCGA),15194,24,0.15735,0.0016,15.2
