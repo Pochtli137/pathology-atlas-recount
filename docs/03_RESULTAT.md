@@ -1,7 +1,7 @@
 # Resultat, dag ett (2026-09-21)
 
-Status: reproduktionen är klar. Utökningen är räknad med 40 000 nolldragningar per cancerform, en körning med 400 000 pågår och
-ersätter talen i avsnitt 2 när den är klar. Allt i avsnitt 2 och 3 är **oprövat** tills en forskare har sett det.
+Status: reproduktionen är klar, utökningen är räknad med 400 000 nolldragningar per cancerform. Allt i avsnitt 2 och 3 är **oprövat**
+tills en forskare har sett det.
 
 ## 1. Reproduktionen: håller
 
@@ -28,48 +28,54 @@ En iakttagelse vi inte kan förklara: i HPA:s urinblåsekohort har alla 169 pati
 
 Metod (`repro/03_nollfordelning.py`): patienternas överlevnad kastas om slumpmässigt mot genuttrycket, så att inget samband kan
 finnas, och exakt samma procedur körs. Det ger den verkliga felfrekvensen för HPA:s tröskel, per cancerform.
-
-**Preliminära tal (40 000 nolldragningar per cancerform):**
+**Slutliga tal: 400 000 nolldragningar per cancerform** (400 omkastningar gånger 1 000 slumpvalda gener, fast slumpfrö). En första
+körning med 40 000 gav samma bild.
 
 - Utan något samband alls är medianen av p-värdena 0,085 till 0,125. Ett giltigt test har median 0,5. I HPA:s publicerade tabell är
   medianen 0,06 till 0,11 i de flesta cancerformer, alltså nära det rena bruset.
-- Tröskeln p < 0,001 har en verklig felfrekvens på 1,1 till 2,0 %, **11 till 20 gånger** den nominella.
-- Ren slump ger därmed **165 till 290 "prognostiska" gener per cancerform**, cirka 4 500 av de 23 500.
+- Tröskeln p < 0,001 har en verklig felfrekvens på **1,25 till 1,73 %, alltså 12 till 17 gånger** den nominella.
+- Ren slump ger därmed **175 till 250 "prognostiska" gener per cancerform**, sammanlagt cirka 4 400 av de 23 506 (19 %).
 
-| Grupp | Cancerformer | Kallade prognostiska | Väntade av ren slump |
+| Grupp | Cancerformer | Kallade prognostiska | Andel som väntas av ren slump |
 |---|---|---:|---:|
-| Tydlig signal | njure KIRC, lever LIHC, njure KIRP | 7 563, 3 449, 1 811 | 291, 167, 159 (4 till 9 %) |
-| Signal i stort, osäkert gen för gen | lunga LUAD, bukspottkörtel PAAD, njure KICH, livmoderhals CESC, huvud-hals HNSC, bröst BRCA | 724 till 1 507 | 15 till 30 % |
-| Svårt att skilja från brus | ändtarm, urinblåsa, sköldkörtel, tjocktarm, äggstock, hjärna GBM, melanom, livmoder, magsäck | 227 till 567 | 40 till 74 % |
-| I nivå med brus | lunga LUSC, prostata PRAD, testikel TGCT | 286, 177, 22 | 268, 173, 206 (94 till 100 %) |
+| Tydlig signal | njure KIRC, lever LIHC, njure KIRP | 7 563, 3 449, 1 811 | 3 till 11 % |
+| Signal i stort, osäkert gen för gen | njure KICH, lunga LUAD, bukspottkörtel PAAD, livmoderhals CESC, huvud-hals HNSC | 893 till 1 507 | 14 till 24 % |
+| Svårt att skilja från brus | bröst, ändtarm, urinblåsa, sköldkörtel, äggstock, hjärna GBM, magsäck, tjocktarm, melanom | 253 till 724 | 35 till 74 % |
+| I nivå med brus | lunga LUSC, livmoder UCEC, prostata PRAD, testikel TGCT | 286, 227, 177, 22 | 77 till 100 % |
 
-Efter kalibrering och kontroll av andelen falska fynd (Benjamini-Hochberg, 5 %) återstår 12 901 av 23 506 gener, alla i sju
-cancerformer: KIRC 7 563, LIHC 3 449, KIRP 1 264, LUAD 409, KICH 140, CESC 51, HNSC 25. I de övriga fjorton går ingen enskild gen att
-säkerställa på den nivån. Med 40 000 dragningar är upplösningen för grov för att hitta ett fåtal mycket starka gener, därför körs
-400 000.
+Efter kalibrering och kontroll av andelen falska fynd (Benjamini-Hochberg, 5 %) återstår **12 504 av 23 506 gener**, i åtta
+cancerformer: KIRC 7 563, LIHC 3 428, KIRP 1 058, LUAD 326, KICH 95, HNSC 25, CESC 7 och BRCA 2. **I tretton av tjugoen cancerformer
+går ingen enskild gen att säkerställa.** Vid 1 % återstår 8 190. Bukspottkörtelcancer är talande: 1 486 gener mot 232 väntade av
+slump, så signal finns i stort, men ingen enskild gen går att peka ut på 5 %-nivån.
 
 Flera kohorter har så få dödsfall att inget test kan bära slutsatser: testikel 4, prostata 9, kromofob njurcancer 9, sköldkörtel 16,
-ändtarm 16. Kromofob njurcancer har ändå 1 203 prognostiska gener i HPA:s tabell, på nio dödsfall bland 64 patienter.
+ändtarm 16. Kromofob njurcancer har ändå 1 203 prognostiska gener i HPA:s tabell, på nio dödsfall bland 64 patienter. Att 95 av dem
+klarar kalibreringen här visar mest att även permutationstestet vilar på nio händelser: de ska inte tas som fynd.
 
 ## 3. Är det användbart och inte bara kritiskt? De robusta generna validerar bättre
 
-HPA:s egen valideringstabell (oberoende kohorter, samma metod) används som utfall: är genen prognostisk även där, åt samma håll?
+HPA:s egen valideringstabell (oberoende kohorter, samma metod) används som utfall (`repro/04_validering.py`): är genen prognostisk
+även där (p < 0,001), åt samma håll? Basnivån är vad en slumpvis vald gen uppnår.
 
-| Cancerform | Robusta (klarar 5 %) | Validerar | Sköra | Validerar | Basnivå |
-|---|---:|---:|---:|---:|---:|
-| Lunga LUAD | 398 | 20,9 % | 1 064 | 11,8 % | 2,9 % |
-| Njure KIRC | 7 484 | 25,5 % | 0 | | 8,3 % |
-| Lever LIHC | 3 061 | 34,5 % | 0 | | 8,4 % |
-| Lunga LUSC | 0 | | 280 | 1,8 % | 1,0 % |
-| Bröst BRCA | 0 | | 571 | 1,9 % | 1,0 % |
-| Tjocktarm COAD | 0 | | 334 | 2,7 % | 1,1 % |
-| Ändtarm READ | 0 | | 566 | 2,7 % | 1,7 % |
-| Bukspottkörtel PAAD | 0 | | 1 404 | 9,8 % | 3,7 % |
-| Hjärna GBM | 0 | | 364 | 19,2 % | 5,8 % |
+| Cancerform | Robusta (klarar 5 %) | Validerar | Sköra | Validerar | Inte prognostiska | Basnivå |
+|---|---:|---:|---:|---:|---:|---:|
+| Lunga LUAD | 316 | **21,8 %** | 1 146 | 12,2 % | 4,2 % | 2,9 % |
+| Lever LIHC | 3 043 | **34,6 %** | 18 | 16,7 % | 9,2 % | 8,4 % |
+| Njure KIRC | 7 484 | **25,5 %** | 0 | | 5,2 % | 8,3 % |
+| Hjärna GBM | 0 | | 364 | 19,2 % | 8,9 % | 5,8 % |
+| Bukspottkörtel PAAD | 0 | | 1 404 | 9,8 % | 4,4 % | 3,7 % |
+| Äggstock OV | 0 | | 333 | 5,4 % | 3,5 % | 2,2 % |
+| Ändtarm READ | 0 | | 566 | 2,7 % | 2,2 % | 1,7 % |
+| Tjocktarm COAD | 0 | | 334 | 2,7 % | 1,5 % | 1,1 % |
+| Bröst BRCA | 1 | | 570 | 1,9 % | 1,3 % | 1,0 % |
+| Lunga LUSC | 0 | | 280 | 1,8 % | 1,5 % | 1,0 % |
 
-I den enda cancerform där båda grupperna finns (lungadenokarcinom) validerar de robusta generna nästan dubbelt så ofta som de sköra.
-I skivepitelcancer i lunga, bröst, tjocktarm och ändtarm validerar de "prognostiska" generna knappt över basnivån, vilket är vad
-bruskalkylen förutsäger. Basnivån är grov (andelen prognostiska i valideringskohorten delat med två) och ska räknas om ordentligt.
+- Där båda grupperna finns (lungadenokarcinom) validerar de robusta generna nästan dubbelt så ofta som de sköra: 21,8 mot 12,2 %.
+- I skivepitelcancer i lunga, bröst, tjocktarm och ändtarm validerar de "prognostiska" generna i 1,8 till 2,7 % av fallen. Gener som
+  HPA INTE kallar prognostiska validerar i 1,3 till 2,2 %. Etiketten tillför alltså nästan ingenting där, vilket är vad bruskalkylen
+  förutsäger.
+- Förbehåll: valideringskohorterna är analyserade med samma uppblåsta procedur, så även "validerad" är för generöst. Jämförelsen mellan
+  grupperna håller ändå, eftersom felet är detsamma i alla grupper.
 
 ## 4. Det här är inte nytt i sak, och det måste sägas
 
@@ -88,9 +94,9 @@ hantverksbidrag, inte en upptäckt.
 
 ## 5. Kvar innan något visas för en forskare
 
-1. Körningen med 400 000 dragningar, och talen ovan uppdaterade.
+1. ~~Körningen med 400 000 dragningar~~ klar 21/9.
 2. Läs Gilis m.fl. och Altman i original. Sök efter fler kritiker och efter svar från HPA.
 3. Kör författarnas R-kod (kräver R) eller förklara avvikelserna i ändtarm och tjocktarm på annat sätt.
-4. Räkna om basnivån i avsnitt 3 ordentligt, och lägg till en känslighetsanalys med Cox-regression på kontinuerligt uttryck.
+4. ~~Räkna om basnivån~~ klar 21/9. Lägg till en känslighetsanalys med Cox-regression på kontinuerligt uttryck.
 5. Skriv två sidor på engelska med tre figurer. Kim avgör vem som får dem: Adil Mardinoglu (korresponderande författare, KTH och
    SciLifeLab) är den naturliga, Lieven Clement i Gent den som redan bryr sig om frågan.
