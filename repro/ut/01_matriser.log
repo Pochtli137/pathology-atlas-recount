@@ -1,0 +1,65 @@
+5 M rader
+10 M rader
+15 M rader
+20 M rader
+25 M rader
+30 M rader
+35 M rader
+40 M rader
+45 M rader
+50 M rader
+55 M rader
+60 M rader
+65 M rader
+70 M rader
+75 M rader
+80 M rader
+85 M rader
+90 M rader
+95 M rader
+100 M rader
+105 M rader
+110 M rader
+115 M rader
+120 M rader
+125 M rader
+130 M rader
+135 M rader
+140 M rader
+145 M rader
+150 M rader
+155 M rader
+160 M rader
+165 M rader
+166 M rader
+Bladder Urothelial Carcinoma (TCGA): 19973 gener x 169 prov, saknade värden 0
+Breast Invasive Carcinoma (TCGA): 19973 gener x 1022 prov, saknade värden 0
+Cervical Squamous Cell Carcinoma and Endocervical Adenocarcinoma (TCGA): 19973 gener x 283 prov, saknade värden 0
+Colon Adenocarcinoma (TCGA): 19973 gener x 254 prov, saknade värden 0
+Glioblastoma Multiforme (TCGA): 19973 gener x 141 prov, saknade värden 0
+Head and Neck Squamous Cell Carcinoma (TCGA): 19973 gener x 492 prov, saknade värden 0
+Kidney Chromophobe (TCGA): 19973 gener x 64 prov, saknade värden 0
+Kidney Renal Clear Cell Carcinoma (TCGA): 19973 gener x 521 prov, saknade värden 0
+Kidney Renal Papillary Cell Carcinoma (TCGA): 19973 gener x 282 prov, saknade värden 0
+Liver Hepatocellular Carcinoma (TCGA): 19973 gener x 362 prov, saknade värden 0
+Lung Adenocarcinoma (TCGA): 19973 gener x 497 prov, saknade värden 0
+Lung Squamous Cell Carcinoma (TCGA): 19973 gener x 489 prov, saknade värden 0
+Ovary Serous Cystadenocarcinoma (TCGA): 19973 gener x 349 prov, saknade värden 0
+Pancreatic Adenocarcinoma (TCGA): 19973 gener x 176 prov, saknade värden 0
+Prostate Adenocarcinoma (TCGA): 19973 gener x 480 prov, saknade värden 0
+Rectum Adenocarcinoma (TCGA): 19973 gener x 88 prov, saknade värden 0
+Skin Cuteneous Melanoma (TCGA): 19973 gener x 99 prov, saknade värden 0
+Stomach Adenocarcinoma (TCGA): 19973 gener x 346 prov, saknade värden 0
+Testicular Germ Cell Tumor (TCGA): 19973 gener x 133 prov, saknade värden 0
+Thyroid Carcinoma (TCGA): 19973 gener x 495 prov, saknade värden 0
+Uterine Corpus Endometrial Carcinoma (TCGA): 19973 gener x 176 prov, saknade värden 0
+Kidney Renal Clear Cell Carcinoma (validation): 19973 gener x 100 prov, saknade värden 0
+Colon Adenocarcinoma (validation): 19973 gener x 486 prov, saknade värden 0
+Glioblastoma Multiforme (validation): 19328 gener x 58 prov, saknade värden 0
+Lung Adenocarcinoma (validation): 19973 gener x 105 prov, saknade värden 0
+Lung Squamous Cell Carcinoma (validation): 19973 gener x 68 prov, saknade värden 0
+Ovary Serous Cystadenocarcinoma (validation): 19269 gener x 81 prov, saknade värden 0
+Rectum Adenocarcinoma (validation): 19973 gener x 207 prov, saknade värden 0
+Liver Hepatocellular Carcinoma (validation): 16717 gener x 231 prov, saknade värden 0
+Pancreatic Adenocarcinoma (validation): 19269 gener x 80 prov, saknade värden 0
+Breast Invasive Carcinoma (validation): 16422 gener x 50 prov, saknade värden 0
