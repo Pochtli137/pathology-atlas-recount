@@ -1,0 +1,9 @@
+.env*
+!.env.example
+data/
+*.h5ad
+*.parquet
+__pycache__/
+.venv/
+.ipynb_checkpoints/
+.DS_Store
