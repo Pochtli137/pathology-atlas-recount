@@ -26,3 +26,12 @@ Append-only. Datum, vem, varför.
   exakta cutoff-regel (logrank.py). Alla OPRÖVADE.
 - Utkast till tvåsidaren på engelska: `05_NOTE_EN.md`. Ingen har sett den. Kim läser och avgör om, och till vem.
 - Inget skickat, inget publicerat, ingen remote.
+
+## 2026-09-22 (Kim, i session)
+
+- Mottagare: Adil Mardinoglu, adilm@scilifelab.se (ur artikeln). Mailutkast i `06_MAIL_MARDINOGLU.md`, artefakt publicerad (privat).
+- Granskning av en annan agent inarbetad: tre totaler förklarade, KICH struken ur överlevarna (12 409 i sju kohorter), Cox-förbehåll
+  (svansar, tröskelgener, ingen stadiejustering), rubriken "survive correction for the cut-off search", valideringstalet in i talrutan,
+  permutationsupplösning 0,005 utskriven. Kontrollerat: proteinatlas.org skiljer "validated" från "potential" på gensidan, så
+  meningen "a user cannot see the difference" är omskriven. HPA:s överlapp i fyra av tio (GBM, KIRC, LIHC, LUAD) verifierat i artikeln.
+- Repot publikt: github.com/Pochtli137/pathology-atlas-recount (MIT). Granskarens skäl: "on request" läses som misstro mot koden.
