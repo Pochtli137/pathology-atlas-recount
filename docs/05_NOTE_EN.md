@@ -21,7 +21,7 @@ Same gene in same cohort22,47798 % of HPA’s
 Spearman correlation between our p and HPA’s p0.97 to 0.9996 in 20 cohorts; 0.90 in rectal cancer (16 deaths)
 Direction agrees (favourable / unfavourable)93 to 99.8 %
 
-The six missing patients are samples without an overall-survival record in TCGA-CDR (BRCA 2, OV, SKCM, STAD, UCEC one each). Sections 2 to 4 count 23,506 labelled pairs: the 23,489 above plus 17 genes we test that HPA’s table does not list. Figure 3 and the validation counts use only genes present in both the TCGA and the validation cohort, so its n is smaller (KIRC 7,484 of 7,563; LIHC 3,061 of 3,449).
+The six missing patients are samples without an overall-survival record in TCGA-CDR (BRCA 2, OV, SKCM, STAD, UCEC one each), so patient selection is: every HPA sample whose patient has a survival record. Of the pairs we call at p < 0.001, 1,012 are not labelled by HPA, and 469 of HPA’s labels we do not reach; an expression filter on median pTPM explains fewer than a tenth of the former, the rest is the survival table. Sections 2 to 4 count 23,506 pairs below 0.001 in our run: the 23,489 above plus 17 genes we test that HPA’s table does not list. These are our raw calls, not the labels shown on proteinatlas.org, which is why the totals differ. Figure 3 and the validation counts use only genes present in both the TCGA and the validation cohort, so its n is smaller (KIRC 7,484 of 7,563; LIHC 3,061 of 3,449).
 Using the exact cut-off rule from the authors’ R code (generateKMplot) instead of our reading of the Methods changes nothing material. The residual difference in rectum and colon is most likely patient selection, which we could not determine.
 
 2. At p < 0.001 the procedure’s real false-positive rate is 1.25 to 1.73 %
