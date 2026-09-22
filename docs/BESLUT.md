@@ -35,3 +35,7 @@ Append-only. Datum, vem, varför.
   permutationsupplösning 0,005 utskriven. Kontrollerat: proteinatlas.org skiljer "validated" från "potential" på gensidan, så
   meningen "a user cannot see the difference" är omskriven. HPA:s överlapp i fyra av tio (GBM, KIRC, LIHC, LUAD) verifierat i artikeln.
 - Repot publikt: github.com/Pochtli137/pathology-atlas-recount (MIT). Granskarens skäl: "on request" läses som misstro mot koden.
+- Andra granskning (ChatGPT, på version 1): överlappar med den första. Nytt och inarbetat: urvalsregeln för patienter utskriven,
+  rå-träffar mot HPA-etiketter åtskilda (1 012 våra utan HPA-etikett, 469 tvärtom; medianfilter förklarar under en tiondel),
+  "13 av 21" mjukat till "passes this correction chain", Monte Carlo-intervall för READ/BLCA, Cox-antaganden. Granskarens uppgift att
+  HPA filtrerar på median pTPM < 1 gick inte att verifiera: metodtexten laddas inte i sidkällan på proteinatlas.org.
