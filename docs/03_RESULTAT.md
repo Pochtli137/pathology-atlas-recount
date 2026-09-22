@@ -1,4 +1,4 @@
-# Resultat, dag ett (2026-09-21)
+# Resultat, dag ett och natten efter (2026-09-21 till 22)
 
 Status: reproduktionen är klar, utökningen är räknad med 400 000 nolldragningar per cancerform. Allt i avsnitt 2 och 3 är **oprövat**
 tills en forskare har sett det.
@@ -18,8 +18,13 @@ Studien: Yuan m.fl., Human Pathology Atlas v2, eBioMedicine 2024. Metoden skrevs
 | Samma riktning (gynnsam eller ogynnsam) | 93 till 99,8 % | |
 | Körtid, alla 21 | 113 sekunder | |
 
-Avvikelserna är störst där antalet dödsfall är litet (ändtarm 16, tjocktarm 61). Trolig orsak: vi använder TCGA:s kurerade
-överlevnadstabell (TCGA-CDR via UCSC Xena), och vilken tabell HPA använde är OKÄNT. Författarnas R-kod är inte körd, R saknas här.
+Avvikelserna är störst där antalet dödsfall är litet (ändtarm 16, tjocktarm 61). **Rättat natten 21–22/9:** artikeln anger TCGA-CDR och
+overall survival, alltså samma överlevnadstabell som vår (`docs/04_LITTERATUR.md` avsnitt 3). Författarnas R-kod är läst
+(github.com/cellur-m/pathology_atlas, `toolbox_pathology.R`, funktionen generateKMplot) men inte körd: de tar cutoffs strikt över 20:e och
+till och med 80:e percentilen, hög grupp = uttryck större än eller lika med cutoffen, ingen minsta gruppstorlek. Den regeln finns nu som
+`rule="authors"` i `repro/logrank.py`. Den ändrar inget: rangkorrelationen i ändtarm går från 0,9005 till 0,9023, i tjocktarm från 0,9735
+till 0,9751. Avvikelsen sitter alltså inte i cutoff-regeln. Kvar som förklaring är patienturvalet, och vilka patienter HPA använde per
+cancerform är OKÄNT.
 
 En iakttagelse vi inte kan förklara: i HPA:s urinblåsekohort har alla 169 patienter avlidit enligt överlevnadstabellen. TCGA har över
 400 patienter med urinblåsecancer. Hur urvalet gjordes är OKÄNT.
@@ -87,16 +92,85 @@ HPA:s egen valideringstabell (oberoende kohorter, samma metod) används som utfa
   något samband, och fann inga säkerställda gener i bröstcancer efter korrektion. Preprinten ser inte ut att ha publicerats i tidskrift.
 - HPA version 2 (2024) använder samma procedur, och proteinatlas.org visar etiketterna per gen.
 
-**Det som är nytt här:** alla 21 cancerformer i version 2, den verkliga felfrekvensen och det väntade antalet falska fynd per cancerform,
-ett kalibrerat p-värde per gen som behåller HPA:s egen procedur (så att det går att lägga bredvid deras tabell), och en första
-visning av att robustheten förutsäger validering i HPA:s egna valideringskohorter. Gilis m.fl. gjorde inget av det. Det är ett
-hantverksbidrag, inte en upptäckt.
+**Rättat natten 21–22/9 efter läsning i original (`docs/04_LITTERATUR.md`):**
 
-## 5. Kvar innan något visas för en forskare
+- Gilis m.fl. mätte felfrekvensen i bröstcancer: en omkastning gav 320 av 17 040 gener med p < 0,001, alltså 1,88 % eller 19 gånger
+  nominellt. Meningen "Gilis m.fl. gjorde inget av det" som stod här var fel. Med Efrons empiriska nollfördelning fick de noll gener i
+  både bröst och lever. Deras invändning, att permutation inte rättar för korrelation mellan gener eller omätta confounders, träffar
+  också vår kalibrering. Våra "robusta" gener ska därför läsas som en övre gräns.
+- **Felfrekvensen går att räkna ut med en formel från 1992** (Lausen och Schumacher, efter Miller och Siegmund 1982, finns i R-paketet
+  maxstat). `repro/08_formel.py`: för HPA:s intervall betyder p = 0,001 i verkligheten 0,0169, alltså 17 gånger. Våra permutationer gav
+  0,74 till 1,02 gånger formelns värde, lägst i kohorter med få dödsfall. Med formeln och Benjamini-Hochberg 5 % återstår 12 451 gener,
+  med permutationerna 12 504. Permutationerna behövdes alltså inte: den minsta rättelsen för HPA är ett funktionsanrop.
+- TCGA-CDR, den överlevnadstabell HPA själva använder, avråder från overall survival i testikelcancer och manar till försiktighet i
+  KICH, PRAD, READ, THCA och BRCA (Liu m.fl., Cell 2018, tabell 3). Poängen om för få dödsfall är redan gjord av datakällan.
+- HPA version 2 nämner varken Gilis, Altman, multipel testning eller cutoff-problemet. Proteinatlas.org version 25.1 har ingen
+  varningstext. Korrekt referens: Yuan m.fl., eBioMedicine 2025;111:105495.
+
+**Det som återstår som vårt:** alla 21 cancerformer i version 2 med tal per cancerform, visningen att formeln från 1992 räcker,
+jämförelsen mot ett test utan cutoff (avsnitt 5), spridningen i antalet slumpgener per dataset (avsnitt 6) och valideringsjämförelsen.
+Det är ett hantverksbidrag, inte en upptäckt, och mindre nytt än det såg ut i går.
+
+## 5. Känslighetsanalys utan cutoff: Cox-regression (natten 21–22/9, OPRÖVAT)
+
+Samma fråga ställd med ett test som inte väljer någon cutoff: Cox-regression per gen på log2(pTPM + 1), sannolikhetskvotstest,
+Benjamini-Hochberg 5 % (`repro/cox.py`, `repro/05_cox.py`). Koden är testad mot statsmodels PHReg (Breslow) och mot en rå optimering
+(`repro/test_cox.py`). R:s coxph använder Efron som standard, skillnaden är OKÄND här men liten vid tider i dagar.
+
+**A. Testet håller sin felfrekvens.** Samma omkastning som i avsnitt 2, 100 000 nolldragningar per cancerform: medianen av p är 0,49 till
+0,52 (ska vara 0,5), felfrekvensen vid 0,05 är 4,4 till 5,9 %, och vid 0,001 är den 0,06 till 0,17 % i de sjutton cancerformer som har
+minst 28 dödsfall. HPA:s procedur ligger på 1,25 till 1,73 %. Undantag: testikel (4 dödsfall) och sköldkörtel (16) ligger på 0,33 %,
+där bär inget test. Se `docs/figurer/fig1_calibration.png`.
+
+**B. Bilden blir densamma, med ett viktigt undantag.**
+
+| Cancerform | Dödsfall | HPA:s etikett | Klarar kalibreringen (avsnitt 2) | Cox, 5 % falska fynd |
+|---|---:|---:|---:|---:|
+| Njure KIRC | 171 | 7 563 | 7 563 | 7 853 |
+| Lever LIHC | 129 | 3 449 | 3 428 | 3 482 |
+| Bukspottkörtel PAAD | 92 | 1 486 | 0 | **2 380** |
+| Njure KIRP | 44 | 1 811 | 1 058 | 926 |
+| Lunga LUAD | 180 | 1 507 | 326 | 750 |
+| Huvud-hals HNSC | 212 | 893 | 25 | 170 |
+| Livmoderhals CESC | 67 | 927 | 7 | 55 |
+| Övriga fjorton | | 5 870 | 97 | 194 |
+| **Summa** | | **23 506** | **12 504** | **15 810** |
+
+- I tolv cancerformer hittar Cox högst fem gener, i sju av dem ingen alls: lunga LUSC, äggstock, ändtarm, melanom, magsäck, tjocktarm
+  och sköldkörtel. HPA anger 253 till 567 prognostiska gener i var och en av dem.
+- **Bukspottkörtelcancer:** kalibreringen i avsnitt 2 kunde inte peka ut någon enskild gen, Cox pekar ut 2 380. Avsnitt 2 sa "signal i
+  stort", och det här visar att den går att lokalisera med ett test som har bättre styrka. Det kalibrerade p-värdet är alltså giltigt
+  men svagt: att rädda HPA:s procedur med kalibrering kostar styrka jämfört med att byta test.
+- Av HPA:s 23 506 gener bekräftas 12 519 av Cox. Cox hittar 3 291 som HPA inte har. Riktningen (gynnsam eller ogynnsam) är densamma
+  i 99 till 100 % av HPA:s gener.
+- Räkna inte testikel (22 gener på 4 dödsfall, modellen konvergerar inte för 22 gener), kromofob njurcancer (154 på 9 dödsfall) och
+  prostata (2 på 9) som fynd.
+
+**C. Validering vid samma listlängd** (`repro/ut/05_validering.csv`, `docs/figurer/fig3_validation.png`): ta lika många gener som HPA
+kallar prognostiska, men rangordna efter Cox-p. Andelen som är prognostisk åt samma håll i HPA:s valideringskohort är lika eller
+högre i åtta av tio cancerformer (glioblastom 29,4 mot 19,2 %, LUSC 3,2 mot 1,8 %, LUAD 15,6 mot 14,3 %), lägre i bukspottkörtel (8,5
+mot 9,8 %) och marginellt lägre i lever (34,2 mot 34,5 %). Skillnaderna är små utom i glioblastom, och utfallet är definierat med HPA:s egen procedur, vilket
+gynnar HPA:s lista. Slutsats: det giltiga testet förlorar inget i validering.
+
+## 6. Hur många slumpgener ger ETT dataset? (natten 21–22/9, OPRÖVAT)
+
+Avsnitt 2 ger medelvärdet. Gener är korrelerade, så antalet i ett enskilt dataset sprider mycket mer än binomialt. 200 omkastningar per
+cancerform på alla gener (`repro/07_antal_under_noll.py`, `repro/ut/07_sammanfattning.csv`), figur 2 omritad.
+
+- Ett typiskt omkastat dataset ger 100 till 190 "prognostiska" gener (median). Vart tjugonde ger 450 till 870. Värsta av 200: sköldkörtel
+  3 900, njure KIRC 3 163, bukspottkörtel 2 676.
+- **I tio av tjugoen cancerformer ligger HPA:s antal prognostiska gener inom vad slumpen ger** (ensidigt permutationstest på antalet,
+  p > 0,05): COAD, GBM, LUSC, OV, PRAD, SKCM, STAD, TGCT, THCA, UCEC. Ändtarm (0,050) och urinblåsa (0,055) på gränsen. Nio bär signal
+  (p ≤ 0,025), bröst svagast (724 mot 95:e percentilen 490). Det här testet är giltigt oavsett korrelation mellan gener.
+- Samma korrelation slår mot varje per-gen-korrektion: Cox med Benjamini-Hochberg 5 % gav under omkastning minst ett "fynd" i 1,5 till
+  13,5 % av dataseten där dödsfallen räcker, och då ofta hundratals eller tusentals (HNSC upp till 2 299, KIRC 3 534). Det är Gilis
+  invändning, och den gäller alla gental i avsnitt 2 och 5. Talen är övre gränser.
+
+## 7. Kvar innan något visas för en forskare
 
 1. ~~Körningen med 400 000 dragningar~~ klar 21/9.
-2. Läs Gilis m.fl. och Altman i original. Sök efter fler kritiker och efter svar från HPA.
-3. Kör författarnas R-kod (kräver R) eller förklara avvikelserna i ändtarm och tjocktarm på annat sätt.
-4. ~~Räkna om basnivån~~ klar 21/9. Lägg till en känslighetsanalys med Cox-regression på kontinuerligt uttryck.
-5. Skriv två sidor på engelska med tre figurer. Kim avgör vem som får dem: Adil Mardinoglu (korresponderande författare, KTH och
+2. ~~Läs Gilis m.fl. i original, sök fler kritiker~~ `docs/04_LITTERATUR.md`. Altman 1994 och Lausen & Schumacher 1992 kvar (betalvägg).
+3. Författarnas R-kod läst, cutoff-regeln utesluten som förklaring (avsnitt 1). Kvar: patienturvalet. Kräver R eller kontakt.
+4. ~~Räkna om basnivån~~ klar 21/9. ~~Känslighetsanalys med Cox-regression~~ klar natten 21–22/9, avsnitt 5.
+5. ~~Skriv två sidor på engelska med tre figurer~~ utkast `docs/05_NOTE_EN.md` natten 21–22/9, Kim läser före allt annat. Kim avgör vem som får dem: Adil Mardinoglu (korresponderande författare, KTH och
    SciLifeLab) är den naturliga, Lieven Clement i Gent den som redan bryr sig om frågan.

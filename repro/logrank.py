@@ -28,9 +28,12 @@ def prepare(time: np.ndarray, event: np.ndarray):
     return dict(at_risk=at_risk, died=died, nj=nj, dj=dj, var_w=var_w, n=len(time))
 
 
-def minp_for_genes(expr: np.ndarray, prep: dict, lo: float = 0.20, hi: float = 0.80, min_group: int = 1):
+def minp_for_genes(expr: np.ndarray, prep: dict, lo: float = 0.20, hi: float = 0.80, min_group: int = 1, rule: str = "ours"):
     """expr: genes x patients. Returns (min_p, best_cutoff_value, n_high_at_best, direction) per gene.
-    direction = +1 if the high-expression group has MORE events than expected (unfavourable), -1 if fewer (favourable)."""
+    direction = +1 if the high-expression group has MORE events than expected (unfavourable), -1 if fewer (favourable).
+    rule="ours":    cutoffs c with q_lo <= c <= q_hi, high group = x > c (written from the article's Methods, used for all results so far).
+    rule="authors": cutoffs c with q_lo <  c <= q_hi, high group = x >= c, exactly as generateKMplot in the authors' toolbox_pathology.R
+                    (github.com/cellur-m/pathology_atlas, read 2026-09-21). The two differ by at most one split at each end of the range."""
     G, n = expr.shape
     A, D, nj, dj, vw = prep["at_risk"], prep["died"], prep["nj"], prep["dj"], prep["var_w"]
     out_p = np.ones(G); out_cut = np.full(G, np.nan); out_nh = np.zeros(G, int); out_dir = np.zeros(G, int)
@@ -42,8 +45,8 @@ def minp_for_genes(expr: np.ndarray, prep: dict, lo: float = 0.20, hi: float = 0
         o1 = np.cumsum(D[order][::-1], axis=0)[::-1]      # observed events among them, per event time
         # candidate cutoffs: distinct values between the 20th and 80th percentile; "high" = strictly greater than the cutoff
         qlo, qhi = np.quantile(x, [lo, hi])
-        first_above = np.searchsorted(xs, xs, side="right")            # index of first patient strictly above xs[k]
-        cand = np.flatnonzero((xs >= qlo) & (xs <= qhi))
+        if rule == "authors": first_above = np.searchsorted(xs, xs, side="left"); cand = np.flatnonzero((xs > qlo) & (xs <= qhi))   # first patient with x >= xs[k]
+        else: first_above = np.searchsorted(xs, xs, side="right"); cand = np.flatnonzero((xs >= qlo) & (xs <= qhi))                  # first patient strictly above xs[k]
         cand = cand[np.r_[True, xs[cand][1:] != xs[cand][:-1]]] if cand.size else cand   # one per distinct value
         k = first_above[cand]; ok = (k >= min_group) & (n - k >= min_group) & (k < n)
         cand, k = cand[ok], k[ok]

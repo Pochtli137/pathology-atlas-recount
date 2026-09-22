@@ -17,3 +17,12 @@ Append-only. Datum, vem, varför.
   säkerställa. OPRÖVAT.
 - Kritiken är inte ny: Gilis m.fl. 2020 (Gent, preprint) gjorde den mot HPA version 1 i två cancerformer. Vårt tillägg är bredden,
   talen per cancerform, en kalibrerad lista och valideringen. Det ska stå överst i allt som visas för en forskare.
+
+## 2026-09-22, natten (Claude ensam, Kim sov; mandat: "bygg något som kommer mänskligheten till nytta")
+
+- Litteraturen läst i original där det gick (`04_LITTERATUR.md`). Bidraget är mindre nytt än det såg ut: Gilis mätte felfrekvensen i
+  bröstcancer 2020, och Lausen & Schumachers formel från 1992 ger samma tal som våra permutationer. Skrivet in i 03 avsnitt 4.
+- Fyra tillägg körda med fast frö: Cox utan cutoff (05), Lausen-formeln (08), spridning per dataset och helkohorttest (07), författarnas
+  exakta cutoff-regel (logrank.py). Alla OPRÖVADE.
+- Utkast till tvåsidaren på engelska: `05_NOTE_EN.md`. Ingen har sett den. Kim läser och avgör om, och till vem.
+- Inget skickat, inget publicerat, ingen remote.
