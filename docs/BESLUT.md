@@ -39,3 +39,17 @@ Append-only. Datum, vem, varför.
   rå-träffar mot HPA-etiketter åtskilda (1 012 våra utan HPA-etikett, 469 tvärtom; medianfilter förklarar under en tiondel),
   "13 av 21" mjukat till "passes this correction chain", Monte Carlo-intervall för READ/BLCA, Cox-antaganden. Granskarens uppgift att
   HPA filtrerar på median pTPM < 1 gick inte att verifiera: metodtexten laddas inte i sidkällan på proteinatlas.org.
+
+## 2026-09-22, kväll (tredje granskningen, okänd modell, inarbetad)
+
+- Granskningen är den bästa hittills. Rätt om: rubriksiffran inverterad (rättad), avsnitt 3 för tunt (200 permutationer, ingen
+  korrektion för 21 kohorter), "indistinguishable from noise" för starkt, permutationsnollan testar global nolla och inte
+  genspecifikt värde, gemensam korrigering för alla gener är ungefärlig, valideringen saknar osäkerhetsmått, konkreta gener saknas.
+- **Testat och bekräftat delvis: BH-felet är Cox-svansen, inte korrelationen** (`repro/09_cox_svans.py`, 2,8 miljoner nolldragningar
+  per kohort). Cox-LRT är kalibrerad vid 3,6e-6 bara i kohorter med cirka 90 dödsfall eller fler. Under det blåser svansen upp:
+  KIRP 15x, UCEC 12x, KICH 73x, TGCT 822x. Cox-kolumnen i avsnitt 4 är inte pålitlig för KIRP, CESC, KICH, PRAD, TGCT. Inskrivet.
+- Fyra exempelgener inlagda: CHEK2 (LUSC), MGMT (GBM), MYC och ERBB2 (OV), alla "potential prognostic" i HPA, q 0,33 till 0,48.
+- 2 000 permutationer körs på de åtta kohorter där svaret kan ändras (p 0,01 till 0,20). Alla 21 hade tagit fem timmar.
+  Cox-delen hoppas över, den är 200 gånger dyrare. Bonferroni och BH över 21 kohorter räknas när körningen är klar.
+- Inte gjort: PFI i stället för OS, justering för ålder och stadium, genspecifik korrigering. Står som "not done" i noten.
+- Granskarens sista råd följs redan: noten går till HPA-teamet, inte till publicering.

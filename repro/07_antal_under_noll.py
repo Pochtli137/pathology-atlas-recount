@@ -6,7 +6,8 @@ keeps the gene-gene correlation intact, and the number of genes below the thresh
   p_global              (1 + #permutations with null_count >= observed count) / (N + 1): does the cohort as a whole carry more
                         prognostic genes than chance produces? One test per cohort, valid under any gene-gene dependence.
   the same for univariate Cox at p < 0.001, and the number of genes Cox + Benjamini-Hochberg (q < 0.05) reports under permutation.
-Usage: python3 repro/07_antal_under_noll.py [N_PERM]   (default 200 per cohort, run in batches of 10 across processes). Seed fixed.
+Usage: python3 repro/07_antal_under_noll.py [N_PERM] [--minp-only]   (default 200 per cohort, batches of 10 across processes; --minp-only skips
+the Cox part, which is 200 times slower, and keeps the Cox columns of the previous run). Seed fixed. Run 2026-09-22: 2000 --minp-only.
 Output: repro/ut/07_counts_<ABBR>.csv (one row per permutation), repro/ut/07_sammanfattning.csv"""
 import sys, importlib.util
 from pathlib import Path
@@ -17,6 +18,8 @@ from logrank import prepare, minp_for_genes  # noqa: E402
 from cox import cox_for_genes  # noqa: E402
 spec = importlib.util.spec_from_file_location("rep", HERE / "02_reproducera.py"); rep = importlib.util.module_from_spec(spec); spec.loader.exec_module(rep)
 UT = rep.UT; NPERM = int(sys.argv[1]) if len(sys.argv) > 1 else 200; BATCH = 10
+MINP_ONLY = "--minp-only" in sys.argv
+ONLY = [a for a in sys.argv[2:] if a.isupper()]   # optional list of cohorts to (re)run; others keep their previous counts   # skip Cox (200 x slower); reuse the Cox columns from an earlier 200-permutation run
 
 
 def bh_count(p, level=0.05):
@@ -27,7 +30,7 @@ def batch(arg):
     abbr, b = arg; rng = np.random.default_rng([20260922, sum(map(ord, abbr)), b])
     c, genes, m, tid, handelse, _ = rep.ladda(abbr); expr = m[np.nanmean(m, axis=1) > 1].astype(np.float64); lg = np.log2(np.nan_to_num(expr) + 1); prep = prepare(tid, handelse); rows = []
     for i in range(BATCH):
-        perm = rng.permutation(expr.shape[1]); p = minp_for_genes(expr[:, perm], prep)[0]; pc = cox_for_genes(lg[:, perm], prep)["p_lrt"]
+        perm = rng.permutation(expr.shape[1]); p = minp_for_genes(expr[:, perm], prep)[0]; pc = cox_for_genes(lg[:, perm], prep)["p_lrt"] if not MINP_ONLY else np.ones(1)
         rows.append(dict(cohort=abbr, batch=b, i=i, minp_below_001=int((p < 1e-3).sum()), cox_below_001=int((pc < 1e-3).sum()), cox_bh_q05=bh_count(pc)))
     return rows
 
@@ -35,16 +38,22 @@ def batch(arg):
 if __name__ == "__main__":
     from multiprocessing import Pool
     vikt = {"BRCA": 9, "HNSC": 8, "LUSC": 8, "LUAD": 7, "KIRC": 7, "OV": 6, "STAD": 5, "LIHC": 4}
-    tasks = sorted(((a, b) for a in rep.NAMN for b in range(NPERM // BATCH)), key=lambda t: -vikt.get(t[0], 1)); rows = []
+    kor = ONLY or list(rep.NAMN)
+    tasks = sorted(((a, b) for a in kor for b in range(NPERM // BATCH)), key=lambda t: -vikt.get(t[0], 1)); rows = []
     with Pool(11) as pool:
         for k, r in enumerate(pool.imap_unordered(batch, tasks)):
             rows += r
             if k % 20 == 0: print(f"{k + 1}/{len(tasks)} batches", flush=True)
     d = pd.DataFrame(rows).sort_values(["cohort", "batch", "i"]); s5 = pd.read_csv(UT / "05_sammanfattning.csv").set_index("cohort"); out = []
+    old = {a: pd.read_csv(UT / f"07_counts_{a}.csv") for a in rep.NAMN}   # previous run: Cox columns, and min-p counts for cohorts not rerun
+    if ONLY:
+        d = pd.concat([d] + [old[a].assign(cohort=a) for a in rep.NAMN if a not in kor], ignore_index=True)
     for a, g in d.groupby("cohort"):
-        g.to_csv(UT / f"07_counts_{a}.csv", index=False); x = g.minp_below_001.to_numpy(); xc = g.cox_below_001.to_numpy(); obs, obs_c = int(s5.hpa_prognostic[a]), int(s5.cox_p001[a])
+        if MINP_ONLY: gc = old[a]; g = g.drop(columns=["cox_below_001", "cox_bh_q05"])
+        else: gc = g
+        g.to_csv(UT / f"07_counts_{a}.csv", index=False); x = g.minp_below_001.to_numpy(); xc = gc.cox_below_001.to_numpy(); obs, obs_c = int(s5.hpa_prognostic[a]), int(s5.cox_p001[a])
         out.append(dict(cohort=a, events=int(s5.events[a]), permutations=len(g), observed_minp=obs, null_mean=round(x.mean(), 1), null_median=int(np.median(x)), null_p05=int(np.percentile(x, 5)),
                         null_p95=int(np.percentile(x, 95)), null_max=int(x.max()), p_global_minp=round((1 + (x >= obs).sum()) / (len(x) + 1), 4),
                         observed_cox=obs_c, cox_null_mean=round(xc.mean(), 1), cox_null_p95=int(np.percentile(xc, 95)), cox_null_max=int(xc.max()), p_global_cox=round((1 + (xc >= obs_c).sum()) / (len(xc) + 1), 4),
-                        cox_bh_any_under_null=round(float((g.cox_bh_q05 > 0).mean()), 3), cox_bh_null_max=int(g.cox_bh_q05.max())))
+                        cox_bh_any_under_null=round(float((gc.cox_bh_q05 > 0).mean()), 3), cox_bh_null_max=int(gc.cox_bh_q05.max()), cox_permutations=len(gc)))
     out = pd.DataFrame(out); out.to_csv(UT / "07_sammanfattning.csv", index=False); print(out.to_string(index=False))
