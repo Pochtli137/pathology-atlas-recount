@@ -1,35 +1,35 @@
-# Mail till Adil Mardinoglu (utkast, Kim skriver om och skickar själv)
+# Mail till Adil Mardinoglu (utkast v2, Kim skriver om och skickar själv)
 
-Mottagare: adilm@scilifelab.se (korresponderande författare enligt artikeln, PMC11683280, primär). Science for Life Laboratory,
-KTH, Stockholm, och King's College London. Kopia: ingen. Bilaga: länk till artefakten (delad först när Kim valt det) och, om han
-vill, repot.
+Mottagare: adilm@scilifelab.se (korresponderande författare, PMC11683280). Ramen är Kims (22/9): testet är om en vanlig människa
+med en AI kan göra forskning utan att förstå fältet, och det ska sägas rakt, inte som ursäkt.
 
 ---
 
-Subject: Reproduction of the Pathology Atlas v2 prognostic genes in all 21 cohorts, and a question
+Subject: An experiment: an AI reproduced your Pathology Atlas prognostic genes. Is the result useful to you?
 
 Dear Adil,
 
-I reproduced the prognostic gene analysis in your eBioMedicine 2024 paper (Human Pathology Atlas v2) from HPA's public expression
-file and the TCGA-CDR survival table, in all 21 TCGA cohorts. The reproduction holds: 98 % of your 22,946 prognostic gene–cohort
-pairs come back, with Spearman 0.97 to 0.9996 against your published p-values.
+I need to start with a disclaimer, because it is the point of this mail.
 
-Then I asked what p < 0.001 means once the best cut-off search is accounted for. Under permutation the procedure's real
-false-positive rate is 1.25 to 1.73 % in every cohort, which Lausen and Schumacher's 1992 formula also gives (0.0169). After
-correction and Benjamini–Hochberg at 5 %, 12,409 of the 23,506 labelled genes remain, in seven cohorts. In ten cohorts the number of
-labelled genes is within what permutation alone produces. A Cox model on continuous expression finds the same cancers and more genes
-in pancreatic cancer, where the corrected cut-off test finds none.
+I am not a researcher and I do not understand the biology in what I am about to send you. I work with A/B testing and statistics
+in e-commerce. I wanted to test one question: can an ordinary person, using an AI agent, produce research work that a researcher
+finds useful, without understanding the field? To test it I asked the agent to reproduce a recent computational study on open data
+and extend it one step. It chose your Human Pathology Atlas v2 paper.
 
-I know this is not new: Gilis et al. raised it against v1 in 2020, and the statistics go back to Altman 1994. What I add is the
-coverage, per-cohort numbers, per-gene corrected values, and a validation comparison in your own validation cohorts. A two-page note
-with three figures is here: [länk], and the code with per-gene tables at github.com/Pochtli137/pathology-atlas-recount. Every number comes from a numbered script with a fixed seed on public files.
+What it did: reproduced your prognostic gene analysis from HPA's public expression file and the TCGA-CDR survival table in all 21
+TCGA cohorts (98 % of your 22,946 prognostic gene–cohort pairs come back). Then it asked what p < 0.001 means once the best cut-off
+search is accounted for: under permutation the real false-positive rate is 1.25 to 1.73 % in every cohort, which matches Lausen and
+Schumacher's 1992 formula, and in ten cohorts the number of labelled genes is within what permutation alone produces. It also found
+that Gilis et al. raised the same point against v1 in 2020, so the statistics are not new; the coverage across v2 is.
 
-I am not a cancer researcher. I work with experimentation and statistics in e-commerce, and this was a test of whether that skill
-set produces anything a researcher would find useful. So my question is simple: is this useful to you, and if not, why not? If the
-labels are only ever a starting point for wet-lab work, a high false-positive rate may be an accepted cost, and I would like to
-understand that.
+The two-page note with three figures is here: [artefaktlänk]. The code and per-gene tables are at
+github.com/Pochtli137/pathology-atlas-recount, every number from a numbered script with a fixed seed.
 
-Happy to share the code, and happy to be told where I have gone wrong.
+I had three other AI models criticise the draft and the agent worked their points in, but no human who knows the field has read
+it. I cannot judge whether it is sound. So my question is simple, and either answer is a result for my experiment: is this useful to
+you? If it is wrong or beside the point, where?
+
+Thank you for your time, and apologies if this lands as noise in a busy inbox.
 
 Best regards,
 Kim Dahlroth
@@ -39,6 +39,6 @@ kim.dahlroth@gmail.com
 ---
 
 Anteckningar:
-- Kort, fakta först, frågan sist. Ingen anklagelse: "not new", "where I have gone wrong".
-- Artefakten är privat tills Kim delar den. Skicka inte länken innan den är delad, annars får han 404. Repot är publikt: https://github.com/Pochtli137/pathology-atlas-recount
-- Svarar han inte inom två veckor: Lieven Clement (Gent) är den som redan bryr sig om frågan.
+- Rubriken säger vad det är innan han öppnar. Ingen forskare vill bli lurad att läsa fem stycken innan disclaimern.
+- Dela artefakten innan länken går ut.
+- Svarar han inte inom två veckor: Lieven Clement (Gent), som redan bryr sig om frågan.
