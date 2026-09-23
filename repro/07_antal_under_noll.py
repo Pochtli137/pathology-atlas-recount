@@ -7,7 +7,8 @@ keeps the gene-gene correlation intact, and the number of genes below the thresh
                         prognostic genes than chance produces? One test per cohort, valid under any gene-gene dependence.
   the same for univariate Cox at p < 0.001, and the number of genes Cox + Benjamini-Hochberg (q < 0.05) reports under permutation.
 Usage: python3 repro/07_antal_under_noll.py [N_PERM] [--minp-only]   (default 200 per cohort, batches of 10 across processes; --minp-only skips
-the Cox part, which is 200 times slower, and keeps the Cox columns of the previous run). Seed fixed. Run 2026-09-22: 2000 --minp-only.
+the Cox part, which is 200 times slower, and keeps the Cox columns of the previous run). Seed fixed. Runs: 200 on all cohorts (2026-09-22), then 2000 --minp-only BLCA BRCA CESC COAD GBM HNSC READ STAD
+(finished 2026-09-23; the first 200 permutations of those are identical to the first run, same seed per batch).
 Output: repro/ut/07_counts_<ABBR>.csv (one row per permutation), repro/ut/07_sammanfattning.csv"""
 import sys, importlib.util
 from pathlib import Path

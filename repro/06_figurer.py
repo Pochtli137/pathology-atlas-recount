@@ -42,7 +42,7 @@ def fig2():
         ax.text(min(r.share_p95, cap) + 3, yi, f"{r.null_median:.0f} ({r.null_p05:.0f} to {r.null_p95:.0f}) / {r.prognostic:,}   ·   {r.events} deaths", va="center", fontsize=6.6, color=MUTED)
     ax.set_yticks(y); ax.set_yticklabels(d.index, color=INK, fontsize=8); ax.set_xlim(0, 260); ax.set_xticks([0, 25, 50, 75, 100, 125, 150]); ax.axvline(100, color=MUTED, lw=0.6, zorder=2)
     ax.grid(axis="y", visible=False); ax.set_xlabel("Genes below p < 0.001 under permutation, as % of genes labelled prognostic (capped at 160)")
-    ax.set_title("Bar: median over 200 permuted datasets. Line: 5th to 95th percentile. Label: counts / labelled", fontsize=8, color=MUTED, loc="left")
+    ax.set_title("Bar: median over 200 permuted datasets (2,000 in eight cohorts). Line: 5th to 95th percentile.\nLabel: median (5th to 95th) / labelled", fontsize=8, color=MUTED, loc="left")
     fig.tight_layout(); fig.savefig(FIG / "fig2_chance_share.png", dpi=300); plt.close(fig)
 
 

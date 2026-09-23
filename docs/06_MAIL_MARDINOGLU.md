@@ -19,10 +19,10 @@ and extend it one step. It chose your Human Pathology Atlas v2 paper.
 What it did: reproduced your prognostic gene analysis from HPA's public expression file and the TCGA-CDR survival table in all 21
 TCGA cohorts (98 % of your 22,946 prognostic gene–cohort pairs come back). Then it asked what p < 0.001 means once the best cut-off
 search is accounted for: under permutation the real false-positive rate is 1.25 to 1.73 % in every cohort, which matches Lausen and
-Schumacher's 1992 formula, and in ten cohorts the number of labelled genes is within what permutation alone produces. It also found
+Schumacher's 1992 formula, and in eleven cohorts the number of labelled genes is within what permutation alone produces. It also found
 that Gilis et al. raised the same point against v1 in 2020, so the statistics are not new; the coverage across v2 is.
 
-The two-page note with three figures is here: [artefaktlänk]. The code and per-gene tables are at
+The two-page note with three figures is here: https://claude.ai/artifact/ACSJ9kjTutmbP5FKxvnqKV. The code and per-gene tables are at
 github.com/Pochtli137/pathology-atlas-recount, every number from a numbered script with a fixed seed.
 
 I had three other AI models criticise the draft and the agent worked their points in, but no human who knows the field has read
@@ -40,5 +40,5 @@ kim.dahlroth@gmail.com
 
 Anteckningar:
 - Rubriken säger vad det är innan han öppnar. Ingen forskare vill bli lurad att läsa fem stycken innan disclaimern.
-- Dela artefakten innan länken går ut.
+- Artefakten är redan delad med länk (version 5, 23/9).
 - Svarar han inte inom två veckor: Lieven Clement (Gent), som redan bryr sig om frågan.

@@ -159,9 +159,14 @@ cancerform på alla gener (`repro/07_antal_under_noll.py`, `repro/ut/07_sammanfa
 
 - Ett typiskt omkastat dataset ger 100 till 190 "prognostiska" gener (median). Vart tjugonde ger 450 till 870. Värsta av 200: sköldkörtel
   3 900, njure KIRC 3 163, bukspottkörtel 2 676.
-- **I tio av tjugoen cancerformer ligger HPA:s antal prognostiska gener inom vad slumpen ger** (ensidigt permutationstest på antalet,
-  p > 0,05): COAD, GBM, LUSC, OV, PRAD, SKCM, STAD, TGCT, THCA, UCEC. Ändtarm (0,050) och urinblåsa (0,055) på gränsen. Nio bär signal
-  (p ≤ 0,025), bröst svagast (724 mot 95:e percentilen 490). Det här testet är giltigt oavsett korrelation mellan gener.
+- **I elva av tjugoen cancerformer ligger HPA:s antal prognostiska gener inom vad slumpen ger** (ensidigt permutationstest på antalet,
+  p > 0,05): BLCA, COAD, GBM, LUSC, OV, PRAD, SKCM, STAD, TGCT, THCA, UCEC. Omkört 23/9 med 2 000 omkastningar i de åtta kohorter där
+  200 gav p mellan 0,01 och 0,2: urinblåsa 0,062 (inom slumpen), ändtarm 0,042 (över), Monte Carlo-intervall cirka ±0,01. Testet är
+  giltigt oavsett korrelation mellan gener.
+- **Korrigerat över 21 kohorter** (`repro/10_kohorttest.py`, `repro/ut/10_kohorter.csv`): Benjamini-Hochberg 5 % behåller sju, KIRC,
+  KIRP, LIHC, LUAD, KICH, CESC och PAAD (q 0,035 till 0,045). HNSC (q 0,053), BRCA (0,064) och READ (0,088) faller. Bonferroni
+  (p < 0,0024) går inte att avgöra för de sex starkaste: de har 200 omkastningar och upplösningen 0,005. I KIRC, KIRP och LIHC ligger
+  det observerade antalet över det största av 200 omkastade.
 - Samma korrelation slår mot varje per-gen-korrektion: Cox med Benjamini-Hochberg 5 % gav under omkastning minst ett "fynd" i 1,5 till
   13,5 % av dataseten där dödsfallen räcker, och då ofta hundratals eller tusentals (HNSC upp till 2 299, KIRC 3 534). Det är Gilis
   invändning, och den gäller alla gental i avsnitt 2 och 5. Talen är övre gränser.

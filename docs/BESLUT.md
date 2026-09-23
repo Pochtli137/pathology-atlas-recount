@@ -53,3 +53,11 @@ Append-only. Datum, vem, varför.
   Cox-delen hoppas över, den är 200 gånger dyrare. Bonferroni och BH över 21 kohorter räknas när körningen är klar.
 - Inte gjort: PFI i stället för OS, justering för ålder och stadium, genspecifik korrigering. Står som "not done" i noten.
 - Granskarens sista råd följs redan: noten går till HPA-teamet, inte till publicering.
+
+## 2026-09-23, kväll (Claude, i session, Kims "kör")
+
+- 2 000-permutationskörningen (klar 10:41) inarbetad. BLCA hamnar inom slumpen (p 0,062), READ över (0,042). Elva av 21 kohorter
+  inom slumpen, inte tio: rubriktalet, noten, mailet, figur 2 och artefakten rättade.
+- Korrektion över 21 kohorter i nytt script `repro/10_kohorttest.py`: BH 5 % behåller sju (KIRC, KIRP, LIHC, LUAD, KICH, CESC, PAAD).
+  HNSC, BRCA och READ faller. Bonferroni går inte att avgöra för de sex starkaste med 200 permutationer; står som "not done" i noten.
+- Artefaktlänken insatt i mailutkastet. Inget skickat.
