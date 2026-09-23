@@ -24,23 +24,39 @@ def _parts(beta, X, A, dj, sx):
     return ll, sx - (m * dj).sum(1), ((S2 / S0 - m * m) * dj).sum(1)
 
 
-def cox_for_genes(expr: np.ndarray, prep: dict, max_iter: int = 25, tol: float = 1e-9, chunk: int = 2000):
+def _parts_strata(beta, X, strata, sx):
+    """Stratified partial likelihood: each stratum has its own baseline hazard; loglik, score and information add over strata."""
+    ll = beta * sx; u = sx.copy(); info = np.zeros_like(beta)
+    for idx, A, dj in strata:
+        Xs = X[:, idx]; W = np.exp(np.clip(beta[:, None] * Xs, -50, 50)); WX = W * Xs
+        S0 = W @ A; S1 = WX @ A; S2 = (WX * Xs) @ A; m = S1 / S0
+        ll = ll - (np.log(S0) * dj).sum(1); u = u - (m * dj).sum(1); info = info + ((S2 / S0 - m * m) * dj).sum(1)
+    return ll, u, info
+
+
+def cox_for_genes(expr: np.ndarray, prep: dict, max_iter: int = 25, tol: float = 1e-9, chunk: int = 2000, strata=None):
     """expr: genes x patients, already on the scale to be modelled (rows with zero variance get p = 1).
+    strata: optional list of (patient index array, prep for those patients) for a stratified model (separate baseline hazard per stratum,
+    one beta). prep is then only used for the event indicator of all patients.
     Returns dict of arrays per gene: beta (per SD), se, p_lrt, p_wald, p_score, converged."""
     G, n = expr.shape; A, D, dj = prep["at_risk"], prep["died"], prep["dj"]; is_event = D.sum(1) > 0
+    if strata is not None:
+        st = [(idx, p["at_risk"], p["dj"]) for idx, p in strata]; parts = lambda b, X, sx: _parts_strata(b, X, st, sx)
+    else:
+        parts = lambda b, X, sx: _parts(b, X, A, dj, sx)
     out = {k: np.full(G, np.nan) for k in ("beta", "se", "p_lrt", "p_wald", "p_score")}; out["converged"] = np.zeros(G, bool)
     for s in range(0, G, chunk):
         X = np.asarray(expr[s:s + chunk], float); sd = X.std(1); ok = sd > 0
         X = (X - X.mean(1, keepdims=True)) / np.where(ok, sd, 1)[:, None]; X[~ok] = 0.0
         sx = X[:, is_event].sum(1); beta = np.zeros(len(X))
-        ll0, u0, i0 = _parts(beta, X, A, dj, sx); ll = ll0.copy(); u, info = u0, i0; done = ~ok
+        ll0, u0, i0 = parts(beta, X, sx); ll = ll0.copy(); u, info = u0, i0; done = ~ok
         for _ in range(max_iter):
             step = np.where(done | (info <= 0), 0.0, u / np.where(info > 0, info, 1)); new = beta + step
-            ll_n, u_n, i_n = _parts(new, X, A, dj, sx)
+            ll_n, u_n, i_n = parts(new, X, sx)
             for _h in range(10):                                   # step halving where the likelihood went down
                 bad = (ll_n < ll - 1e-12) & ~done
                 if not bad.any(): break
-                step = np.where(bad, step / 2, step); new = beta + step; ll_n, u_n, i_n = _parts(new, X, A, dj, sx)
+                step = np.where(bad, step / 2, step); new = beta + step; ll_n, u_n, i_n = parts(new, X, sx)
             done = done | (np.abs(ll_n - ll) < tol * (np.abs(ll) + 1)); beta, ll, u, info = new, ll_n, u_n, i_n
             if done.all(): break
         se = 1 / np.sqrt(np.where(info > 0, info, np.nan)); sl = slice(s, s + len(X))

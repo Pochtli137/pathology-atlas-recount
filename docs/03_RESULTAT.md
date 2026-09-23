@@ -179,3 +179,28 @@ cancerform på alla gener (`repro/07_antal_under_noll.py`, `repro/ut/07_sammanfa
 4. ~~Räkna om basnivån~~ klar 21/9. ~~Känslighetsanalys med Cox-regression~~ klar natten 21–22/9, avsnitt 5.
 5. ~~Skriv två sidor på engelska med tre figurer~~ utkast `docs/05_NOTE_EN.md` natten 21–22/9, Kim läser före allt annat. Kim avgör vem som får dem: Adil Mardinoglu (korresponderande författare, KTH och
    SciLifeLab) är den naturliga, Lieven Clement i Gent den som redan bryr sig om frågan.
+
+## 8. Är Cox-signalen stadium? (23/9 kväll, efter fjärde granskningen, OPRÖVAT)
+
+Cox stratifierad på AJCC-stadium I–IV (FIGO för CESC, OV, UCEC) i `repro/11_stadium.py`, kalibrering med omkastning inom stadium i
+`repro/12_stadium_kalibrering.py` (20 omkastningar, alla gener). Ojusterat räknat på samma patienter som det stratifierade.
+
+| Kohort | Dödsfall | Cox BH 5 %, ojusterat | Stratifierat på stadium | Stadium × grad | Falskpositiv vid 0,001, stratifierat |
+|---|---|---|---|---|---|
+| KIRC | 170 | 7 806 | 4 203 | 2 407 | 0,0005 |
+| LIHC | 115 | 2 377 | 1 117 | 377 | 0,0011 |
+| LUAD | 178 | 811 | 4 | | 0,0009 |
+| KIRP | 39 | 805 | 0 | | 0,0009 |
+| PAAD | 92 | 1 711 | 5 | | 0,0021 (stadium III och IV har 3 och 4 patienter) |
+| HNSC | 182 | 77 | 108 | | 0,0007 |
+| CESC | 67 | 61 | 247 | | 0,0007 |
+| BRCA | 132 | 7 | 34 | | 0,0014 |
+
+- **Lungadenokarcinom, papillär njurcancer och pankreas: signalen försvinner nästan helt när stadium hålls fast.** Stratifieringen är
+  kalibrerad där, så det är inte ett test som slutat fungera. KIRP har 39 dödsfall och PAAD är nästan bara stadium II, så där kan
+  styrkeförlust bidra. LUAD har 178 dödsfall och den förklaringen håller inte.
+- **KIRC och LIHC överlever stadium** men halveras. Med grad dessutom återstår 2 407 och 377. Stadium × grad är inte kalibrerat.
+- I CESC, HNSC och BRCA ökar antalet med stadium. Kalibreringen håller, så det ser ut som att stadium tar bort brus snarare än
+  signal. Inte förklarat.
+- KICH (9 dödsfall) och TGCT (2 med stadium) går inte att stratifiera: falskpositiv 0,002 och 0,09.
+- GBM och PRAD saknar användbart stadium i TCGA-CDR.

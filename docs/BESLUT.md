@@ -61,3 +61,11 @@ Append-only. Datum, vem, varför.
 - Korrektion över 21 kohorter i nytt script `repro/10_kohorttest.py`: BH 5 % behåller sju (KIRC, KIRP, LIHC, LUAD, KICH, CESC, PAAD).
   HNSC, BRCA och READ faller. Bonferroni går inte att avgöra för de sex starkaste med 200 permutationer; står som "not done" i noten.
 - Artefaktlänken insatt i mailutkastet. Inget skickat.
+
+## 2026-09-23, natt (fjärde granskningen, Kim klistrade in)
+
+- Granskningens viktigaste punkt testad: stadiumstratifierad Cox (`repro/11_stadium.py`, kalibrering `12`). LUAD 811 → 4, KIRP 805 → 0,
+  PAAD 1 711 → 5, medan KIRC (7 806 → 4 203) och LIHC (2 377 → 1 117) står kvar. Stratifieringen är kalibrerad i de kohorterna.
+  Detta ändrar "Follows" i noten: ojusterad association i LUAD, KIRP och PAAD går inte att skilja från stadium.
+- Stratifierad Cox tillagd i `cox.py`, testad mot brute force (statsmodels saknas, de testerna hoppas över).
+- Noten är inte omskriven än. Övriga punkter i granskningen bedömda i sessionen, se svaret till Kim.
