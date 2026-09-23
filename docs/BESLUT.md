@@ -69,3 +69,8 @@ Append-only. Datum, vem, varför.
   Detta ändrar "Follows" i noten: ojusterad association i LUAD, KIRP och PAAD går inte att skilja från stadium.
 - Stratifierad Cox tillagd i `cox.py`, testad mot brute force (statsmodels saknas, de testerna hoppas över).
 - Noten är inte omskriven än. Övriga punkter i granskningen bedömda i sessionen, se svaret till Kim.
+- Noten omskriven samma natt (Kims "kör"): stadiumresultatet bär rubriken och talrutan. Elva-av-21 nedtonat till åtta av sexton,
+  uttryckt som frånvaro av evidens; Cox-nollorna i LUSC, OV och STAD är huvudargumentet. BH över 21 kohorter struket. Valideringen
+  räknas nu med Lausen-korrigerat valideringsutfall (`repro/13_validering_strikt.py`): etiketterna replikerar 3 till 5 gånger
+  basnivån, och "almost no information" är struket. Replikering skiljer inte en prognostisk gen från en stadiummarkör. Rang-Cox tillagd i 11: PAAD
+  1 711 → 657, resten stabilt. Figur 3 utgår. HTML-källan ligger nu i `docs/html/note.html`. Mailet (v3) ställer den skarpa frågan.

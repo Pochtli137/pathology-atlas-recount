@@ -3,11 +3,13 @@
 Stage from TCGA-CDR ajcc_pathologic_tumor_stage, collapsed to I-IV (clinical_stage, FIGO, when ajcc is mostly missing, as in CESC).
 Grade from histological_grade (G1-G4). Patients without stage (or grade) are dropped, so the unstratified model is also rerun on
 exactly the patients the stratified model uses: the difference between those two columns is the effect of stage alone.
+Also on within-gene ranks instead of log2(pTPM + 1) (rank columns), which removes the leverage of heavy tails and zero-inflated genes.
 Counts: genes with BH q < 0.05, and how many of the genes our best cut-off run labels prognostic (p < 0.001) keep Cox q < 0.05.
 No randomness. Output: repro/ut/11_stadium.csv"""
 import sys, re, importlib.util
 from pathlib import Path
 import numpy as np, pandas as pd
+from scipy.stats import rankdata
 
 HERE = Path(__file__).resolve().parent; sys.path.insert(0, str(HERE))
 from logrank import prepare  # noqa: E402
@@ -56,6 +58,7 @@ for abbr in KOHORTER:
              stage_counts=" ".join(f"{k}:{v}" for k, v in pd.Series(sg).value_counts().sort_index().items()),
              cox_all=int((bh(p_all) < .05).sum()), cox_staged_patients=int((bh(p_sub) < .05).sum()), cox_stage_strata=int((bh(p_st) < .05).sum()),
              labelled=int(labels.sum()), labelled_keep_unadj=int((labels[:] & (bh(p_sub) < .05)).sum()), labelled_keep_stage=int((labels & (bh(p_st) < .05)).sum()))
+    R = rankdata(X, axis=1); r.update(cox_rank_staged_patients=int((bh(kor(R, t, e)) < .05).sum()), cox_rank_stage_strata=int((bh(kor(R, t, e, sg)) < .05).sum()))
     hg = har & grd.notna().to_numpy()
     if hg.sum() > 0.6 * len(tid):
         sgg = (stg.astype(str) + "_" + grd.astype(str)).to_numpy()[hg]; p_sub2 = kor(expr[:, hg], tid[hg], ev[hg]); p_sg = kor(expr[:, hg], tid[hg], ev[hg], sgg)
